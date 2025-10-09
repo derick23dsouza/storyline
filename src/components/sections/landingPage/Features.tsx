@@ -1,8 +1,9 @@
 import { LineChart, Users, Sparkles, BookText } from "lucide-react";
+import Container from "@/components/container/Container"; 
 
 const features = [
   {
-    icon: <BookText className="w-8 h-8 text-amber-500" />, 
+    icon: <BookText className="w-8 h-8 text-amber-500" />,
     title: "Track Your Reading",
     description:
       "Easily add books or articles, mark progress, and keep your personal library organized.",
@@ -30,12 +31,16 @@ const features = [
 export default function Features() {
   return (
     <section className="relative w-full py-24 text-white">
-      <div className="max-w-6xl mx-auto px-6 text-center">
-        <h2 className="text-4xl md:text-6xl font-semibold mb-4">Your Reading, Reimagined</h2>
-        <p className="text-zinc-400 max-w-2xl mx-auto mb-16">
-          Storyline gives you the tools to stay consistent, understand your habits,
-          and connect with others who love to read.
-        </p>
+      <Container>
+        <div className="text-center">
+          <h2 className="text-4xl md:text-6xl font-semibold mb-4">
+            Your Reading, Reimagined
+          </h2>
+          <p className="text-zinc-400 max-w-2xl mx-auto mb-16">
+            Storyline gives you the tools to stay consistent, understand your
+            habits, and connect with others who love to read.
+          </p>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {features.map((feature, index) => (
@@ -51,7 +56,7 @@ export default function Features() {
             </div>
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
