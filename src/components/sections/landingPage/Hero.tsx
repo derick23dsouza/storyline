@@ -6,12 +6,12 @@ import Container from "@/components/container/Container";
 
 export default function Hero() {
   return (
-    <section className="relative flex items-center justify-center min-h-[90vh] bg-gradient-to-b from-black via-zinc-950 to-black">
+    <section className="flex items-center justify-center min-h-[90vh] bg-gradient-to-b from-black via-zinc-950 to-black">
       <Container className="flex flex-col-reverse md:flex-row items-center justify-between py-12">
         {/* Left Content */}
         <div className="w-full md:w-1/2 flex flex-col justify-center items-start text-left space-y-6 mt-10 md:mt-0">
           <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
-            Discover, Discuss, and Dive Into Stories That Inspire
+            Discover, Discuss, and Dive Into <span className="text-amber-500"> Stories That Inspire</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-300">
             Find your next favorite read, connect with readers worldwide, and track your literary journey — all in one place.
