@@ -64,7 +64,7 @@ export default function Navbar() {
 
       {/* Mobile Modal */}
       {menuOpen && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center py-30 bg-black/90 text-white">
+        <div className="fixed h-[100vh] inset-0 z-50 flex flex-col items-center py-30 bg-black/95 text-white">
           <button
             onClick={() => setMenuOpen(false)}
             className="absolute top-6 right-6 text-gray-300 hover:text-white transition"
