@@ -3,25 +3,25 @@ import Container from "@/components/container/Container";
 
 const features = [
   {
-    icon: <BookText className="w-8 h-8 text-amber-500" />,
+    icon: <BookText className="w-8 h-8 text-lime-300" />,
     title: "Track Your Reading",
     description:
       "Easily add books or articles, mark progress, and keep your personal library organized.",
   },
   {
-    icon: <LineChart className="w-8 h-8 text-amber-500" />,
+    icon: <LineChart className="w-8 h-8 text-lime-300" />,
     title: "Visualize Your Growth",
     description:
       "See stats, reading streaks, and insights on how your habits evolve over time.",
   },
   {
-    icon: <Sparkles className="w-8 h-8 text-amber-500" />,
+    icon: <Sparkles className="w-8 h-8 text-lime-300" />,
     title: "AI Summaries & Highlights",
     description:
       "Generate quick summaries, key quotes, or personalized reading insights using AI.",
   },
   {
-    icon: <Users className="w-8 h-8 text-amber-500" />,
+    icon: <Users className="w-8 h-8 text-lime-300" />,
     title: "Join a Reading Community",
     description:
       "Connect with fellow readers, share your progress, and climb the leaderboard.",

@@ -7,7 +7,7 @@ export default function CTASection() {
     <section className="relative w-full py-24 text-center text-white overflow-hidden">
       <Container className="relative z-10 border border-zinc-700 p-12 bg-[radial-gradient(circle_at_center,_rgba(56,189,248,0.2),_rgba(9,9,11,1)_75%)] rounded-lg">
         <h2 className="text-4xl md:text-6xl font-semibold mb-6 text-lime-300">
-          Start Your Storyline Today
+          Start Your Storyline Today!
         </h2>
         <p className="text-zinc-400 max-w-2xl mx-auto mb-10">
           Build your personal reading journey. Track progress, explore timeless classics,
