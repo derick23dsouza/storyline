@@ -1,11 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const res = await fetch(`https://gutendex.com/books/${params.id}`);
+    const { id: bookId } = await context.params;
+    const res = await fetch(`https://gutendex.com/books/${bookId}`);
     const book = await res.json();
 
     const textUrl =
