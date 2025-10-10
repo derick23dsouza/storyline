@@ -1,6 +1,7 @@
 "use client";
 
 import { useSession } from "@/lib/auth-client";
+import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 
 import { toast } from "react-hot-toast";
@@ -58,6 +59,15 @@ export default function AddButton({ book }: AddButtonProps) {
       }
     });
   }
+  if (!session)return(<Link href={`${process.env.NEXT_PUBLIC_API_URL}/login`} className="px-4 py-2 rounded-md transition-all bg-lime-300 text-black hover:bg-lime-400">
+  
+    
+
+    
+    Login and Add to library
+
+  
+  </Link>)
 
   return (
     <button
