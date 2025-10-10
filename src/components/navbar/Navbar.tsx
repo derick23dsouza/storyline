@@ -4,9 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 
 import { BookOpen, Menu, X } from "lucide-react";
+import { signOut, useSession } from "@/lib/auth-client";
+
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { data: session, isPending } = useSession();
 
   const navigation = [
     { name: "Discover Books", href: "/discover" },
@@ -37,7 +40,13 @@ export default function Navbar() {
           ))}
 
           <div className="flex gap-3">
-            <Link
+            {
+                session?(<>
+                <button onClick={()=>signOut()} className="px-6 py-2 border border-white text-white rounded-full hover:bg-white/10 transition">
+                    Logout
+                </button>
+                </>):(<>
+                <Link
               href="/login"
               className="px-4 py-2 border border-lime-300 text-lime-300 rounded-full hover:bg-white/10 transition"
             >
@@ -48,7 +57,9 @@ export default function Navbar() {
               className="px-4 py-2 bg-blue-950 rounded-full hover:bg-blue-800 transition"
             >
               Sign Up
-            </Link>
+            </Link></>)
+            }
+            
           </div>
         </nav>
 
@@ -84,7 +95,13 @@ export default function Navbar() {
           </ul>
 
           <div className="flex flex-col gap-4 mt-10 w-40">
-            <Link
+            {
+                session?(<>
+                <button onClick={()=>signOut()} className="px-6 py-2 border border-white text-white rounded-full hover:bg-white/10 transition">
+                    Logout
+                </button>
+                </>):(<>
+                <Link
               href="/login"
               onClick={() => setMenuOpen(false)}
               className="px-4 py-2 border border-white/20 rounded-full hover:bg-white/10 transition text-center"
@@ -97,7 +114,9 @@ export default function Navbar() {
               className="px-4 py-2 bg-blue-950 rounded-full hover:bg-blue-800 transition text-center"
             >
               Sign Up
-            </Link>
+            </Link></>)
+            }
+            
           </div>
         </div>
       )}
