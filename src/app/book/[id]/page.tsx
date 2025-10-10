@@ -20,14 +20,28 @@ export default async function BookPage(props: {
 
   const authors = book.authors?.map((a: any) => a.name).join(", ") || "Unknown Author";
   const languages = book.languages?.join(", ").toUpperCase();
+  const summary =
+    (Array.isArray(book.summaries) && book.summaries.length > 0 && book.summaries[0]) ||
+    "Summary not available right now.";
 
   return (
-    <section className="min-h-screen w-full py-16 bg-black text-white">
+    <section className="min-h-screen w-full py-16 bg-black text-white mt-10">
       <Container className="flex flex-col md:flex-row gap-12">
-        <div className="w-full md:w-1/3 relative aspect-[3/4] rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900">
-          <Image src={cover} alt={book.title} fill unoptimized className="object-cover" />
+        {/* Book Cover */}
+        <div className="w-full md:w-1/4 flex justify-center">
+          <div className="relative aspect-[3/4] w-64 max-h-[420px] rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900 shadow-lg">
+            <Image
+              src={cover}
+              alt={book.title}
+              fill
+              unoptimized
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 300px"
+            />
+          </div>
         </div>
 
+        {/* Book Info */}
         <div className="flex-1">
           <h1 className="text-4xl font-semibold text-lime-300">{book.title}</h1>
           <p className="text-zinc-400 text-lg mt-2">{authors}</p>
@@ -37,8 +51,14 @@ export default async function BookPage(props: {
             <p><strong>Downloads:</strong> {book.download_count.toLocaleString()}</p>
           </div>
 
+          {/* ✅ Summary */}
+          <div className="mt-8">
+            <h2 className="text-xl font-medium text-white mb-2">Summary</h2>
+            <p className="text-zinc-400 leading-relaxed">{summary}</p>
+          </div>
+
+          {/* Buttons */}
           <div className="mt-8 flex gap-4">
-            {/* 👇 pass full book data, button handles session + library check */}
             <AddButton book={book} />
             <Link
               href={book.formats["text/html"] || "#"}
