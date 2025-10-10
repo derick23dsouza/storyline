@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import LibraryGrid from "./LibraryGrid";
 import Container from "@/components/container/Container";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
 export default function DashboardClient() {
   const { data: session, isPending } = useSession();
@@ -45,12 +46,12 @@ export default function DashboardClient() {
           <h2 className="text-2xl text-lime-300 mb-4">
             Please sign in to view your library
           </h2>
-          <a
+          <Link
             href="/login"
             className="text-sm text-zinc-400 underline hover:text-lime-200"
           >
             Go to Login
-          </a>
+          </Link>
         </div>
       </Container>
     );
