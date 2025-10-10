@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function DELETE(
-  req: Request,
+  req: NextRequest,
   context: { params: Promise<{ id: string }>  }
 ) {
   try {
@@ -12,9 +12,10 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { params } = await context;
+    // const { params } = await context;
 
-    const bookId = ( await params).id;
+    // const bookId = ( await params).id;
+    const { id: bookId } = await context.params;
 
     const deleted = await prisma.collection.deleteMany({
       where: {
