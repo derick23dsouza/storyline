@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import Container from "@/components/container/Container"; 
+import Link from "next/link";
 
 const sampleBooks = [
   {
@@ -58,29 +59,30 @@ export default function CollectionPreview() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {sampleBooks.map((book) => (
-              <div
-                key={book.id}
-                className="rounded-2xl overflow-hidden bg-zinc-800/50 border border-zinc-700 hover:border-indigo-400/50 transition-all group"
-              >
-                <div className="relative aspect-[3/4]">
-                  <Image
-                    src={book.cover}
-                    alt={book.title}
-                    fill
-                    unoptimized
-                    className="object-cover group-hover:scale-105 transition-transform"
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-medium truncate">
-                    {book.title}
-                  </h3>
-                  <p className="text-sm text-zinc-400">{book.author}</p>
-                  <p className="text-xs mt-1 text-indigo-400">
-                    {book.category}
-                  </p>
-                </div>
-              </div>
+                <Link key={book.id} href={`${process.env.NEXT_PUBLIC_API_URL}/book/${book.id}`}>
+                    <div
+                      className="rounded-2xl overflow-hidden bg-zinc-800/50 border border-zinc-700 hover:border-indigo-400/50 transition-all group"
+                    >
+                      <div className="relative aspect-[3/4]">
+                        <Image
+                          src={book.cover}
+                          alt={book.title}
+                          fill
+                          unoptimized
+                          className="object-cover group-hover:scale-105 transition-transform"
+                        />
+                      </div>
+                      <div className="p-4">
+                        <h3 className="text-lg font-medium truncate">
+                          {book.title}
+                        </h3>
+                        <p className="text-sm text-zinc-400">{book.author}</p>
+                        <p className="text-xs mt-1 text-indigo-400">
+                          {book.category}
+                        </p>
+                      </div>
+                    </div>
+                </Link>
             ))}
           </div>
         </div>
