@@ -8,7 +8,7 @@ import { signOut, useSession } from "@/lib/auth-client";
 export default function Hero() {
     const { data: session, isPending } = useSession();
     return (
-        <section className="flex items-center justify-center min-h-[90vh] bg-gradient-to-b from-black via-zinc-950 to-black">
+        <section className="flex items-center justify-center min-h-[90vh] ">
             <Container className="flex flex-col-reverse md:flex-row items-center justify-between py-12">
                 {/* Left Content */}
                 <div className="w-full md:w-1/2 flex flex-col justify-center items-start text-left space-y-6 mt-10 md:mt-0">
@@ -58,7 +58,7 @@ export default function Hero() {
                 <div className="w-full md:w-1/2 flex justify-center md:justify-end mt-4 sm:mt-0">
                     <div className="relative w-[80%] max-w-md md:max-w-lg lg:max-w-xl aspect-square">
                         <Image
-                            src="/images/HeroImage.png"
+                            src="/images/HeroImage4.png"
                             alt="Minimalist Reader Illustration"
                             fill
                             className="object-contain drop-shadow-lg"
