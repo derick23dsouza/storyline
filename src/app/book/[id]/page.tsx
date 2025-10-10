@@ -61,8 +61,7 @@ export default async function BookPage(props: {
           <div className="mt-8 flex gap-4">
             <AddButton book={book} />
             <Link
-              href={book.formats["text/html"] || "#"}
-              target="_blank"
+              href={`${process.env.NEXT_PUBLIC_API_URL}/read/${book.id}`}
               className="px-4 py-2 rounded-md bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-lime-300 hover:border-lime-300 transition-all"
             >
               Read Online

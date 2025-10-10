@@ -84,8 +84,8 @@ export default function ReadingPage() {
     setCurrentPage((p) => Math.min(p + 1, pages.length - 1));
   const prevPage = () => setCurrentPage((p) => Math.max(p - 1, 0));
 
-  if (loading) return <p className="text-center py-12 text-zinc-400">Loading book...</p>;
-  if (!book) return <p className="text-center text-red-500">Failed to load book.</p>;
+  if (loading) return <p className="text-center py-12 text-zinc-400 mt-30">Loading book...</p>;
+  if (!book) return <p className="text-center text-red-500 mt-30">Failed to load book.</p>;
 
   return (
     <section className="min-h-screen bg-black text-white px-6 py-8 flex flex-col items-center mt-20">
