@@ -101,6 +101,7 @@
 
 import Container from "@/components/container/Container";
 import BookCard from "@/components/discover/BookCard"; 
+import Link from "next/link";
 import { Suspense } from "react";
 
 export default async function DiscoverPage(props: {
@@ -136,11 +137,15 @@ export default async function DiscoverPage(props: {
         {/* Book Grid */}
         {books.length > 0 ? (
           <Suspense fallback={<p className="text-zinc-500">Loading books...</p>}>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8">
-              {books.map((book: any) => (
-                <BookCard key={book.id} book={book} />
-              ))}
-            </div>
+            
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8">
+                  {books.map((book: any) => (
+                    <Link key={book.id} href={`${process.env.NEXT_PUBLIC_API_URL}/book/${book.id}`}>
+                        <BookCard  book={book} />
+                    </Link>
+                  ))}
+                </div>
+            
           </Suspense>
         ) : (
           <p className="text-zinc-400">No books found for “{query}”.</p>
