@@ -12,7 +12,7 @@ export async function POST(req: Request) {
 
     const { id, title, author, cover, category } = await req.json();
 
-    // ✅ Convert id to string (Gutendex IDs are numbers)
+    
     const bookId = String(id);
 
     // Check if book already exists in DB
@@ -55,3 +55,29 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export async function GET(req: Request) {
+  try {
+    const session = await auth.api.getSession({ headers: req.headers });
+
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const collections = await prisma.collection.findMany({
+      where: { userId: session.user.id },
+      include: { book: true },
+      orderBy: { createdAt: "desc" },
+    });
+
+    // Always return valid JSON — even if empty
+    return NextResponse.json(collections ?? [], { status: 200 });
+  } catch (error) {
+    console.error("Error fetching collections:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch collections" },
+      { status: 500 }
+    );
+  }
+}
+
