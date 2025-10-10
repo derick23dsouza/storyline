@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }>  }
 ) {
   try {
     const session = await auth.api.getSession({ headers: req.headers });
@@ -12,7 +12,9 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const bookId = params.id;
+    const { params } = await context;
+
+    const bookId = ( await params).id;
 
     const deleted = await prisma.collection.deleteMany({
       where: {
