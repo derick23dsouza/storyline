@@ -11,11 +11,13 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { data: session, isPending } = useSession();
 
+
+    //add community and insights later
   const navigation = [
     { name: "Discover Books", href: "/discover" },
-    { name: "Community", href: "/community" },
+    // { name: "Community", href: "/community" },
     { name: "Dashboard", href: "/dashboard" },
-    { name: "Insights", href: "/insights" },
+    // { name: "Insights", href: "/insights" },
   ];
 
   return (
