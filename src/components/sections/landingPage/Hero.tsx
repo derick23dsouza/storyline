@@ -20,7 +20,7 @@ export default function Hero() {
                     </p>
 
                     {/* CTA Buttons */}
-                    <div className="mt-8 mx-auto sm:mx-0 flex flex-row sm:flex-row gap-4">
+                    <div className={`mt-8 mx-auto sm:mx-0 flex sm:flex-row gap-4 ${session?"flex-col text-center":"flex-row"}`}>
                         {
                             session ? (<>
                                 <Link
