@@ -1,62 +1,56 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import {prisma} from "@/lib/prisma";
 
-// Handle POST /api/collections
 export async function POST(req: Request) {
   try {
-    //  Pass `req` to getSession
     const session = await auth.api.getSession({ headers: req.headers });
 
-    if (!session || !session.user) {
+    if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = session.user.id;
     const { id, title, author, cover, category } = await req.json();
 
-    if (!id || !title) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
-    }
+    // ✅ Convert id to string (Gutendex IDs are numbers)
+    const bookId = String(id);
 
-    //  Check if book already exists in DB
-    let book = await prisma.book.findUnique({ where: { id } });
+    // Check if book already exists in DB
+    let book = await prisma.book.findUnique({ where: { id: bookId } });
+
     if (!book) {
       book = await prisma.book.create({
-        data: { id, title, author, cover, category },
+        data: { id: bookId, title, author, cover, category },
       });
     }
 
-    //  Prevent duplicate collection entries
+    // Check if already added
     const existing = await prisma.collection.findFirst({
-      where: { userId, bookId: id },
+      where: {
+        userId: session.user.id,
+        bookId: book.id,
+      },
     });
 
     if (existing) {
       return NextResponse.json(
-        { message: "Book already in your collection" },
+        { message: "Already in your library" },
         { status: 200 }
       );
     }
 
-    //  Add to user's collection
-    const collection = await prisma.collection.create({
+    await prisma.collection.create({
       data: {
-        userId,
-        bookId: id,
-        status: "reading",
-        progress: 0,
+        userId: session.user.id,
+        bookId: book.id,
       },
     });
 
-    return NextResponse.json({ success: true, collection });
+    return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
-    console.error("Add to collection error:", error);
+    console.error("Add to library failed:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Failed to add to library" },
       { status: 500 }
     );
   }
