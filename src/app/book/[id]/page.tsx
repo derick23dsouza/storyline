@@ -9,7 +9,9 @@ export default async function BookPage(props: {
 }) {
   const { id } = await props.params;
 
-  const res = await fetch(`https://gutendex.com/books/${id}`, { cache: "no-store" });
+  const res = await fetch(`https://gutendex.com/books/${id}`, { next:{
+    revalidate:60*60*24
+  } });
   if (!res.ok) return notFound();
   const book = await res.json();
 
@@ -51,7 +53,7 @@ export default async function BookPage(props: {
             <p><strong>Downloads:</strong> {book.download_count.toLocaleString()}</p>
           </div>
 
-          {/* ✅ Summary */}
+          {/*  Summary */}
           <div className="mt-8">
             <h2 className="text-xl font-medium text-white mb-2">Summary</h2>
             <p className="text-zinc-400 leading-relaxed">{summary}</p>
@@ -64,7 +66,7 @@ export default async function BookPage(props: {
               href={`${process.env.NEXT_PUBLIC_API_URL}/read/${book.id}`}
               className="px-4 py-2 rounded-md bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-lime-300 hover:border-lime-300 transition-all"
             >
-              Read Online
+              Start reading
             </Link>
           </div>
         </div>

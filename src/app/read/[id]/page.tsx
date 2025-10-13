@@ -12,45 +12,6 @@ export default function ReadingPage() {
   const [book, setBook] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-//   useEffect(() => {
-//     async function loadBook() {
-//       try {
-//         const res = await fetch(`https://gutendex.com/books/${id}`);
-//         const data = await res.json();
-//         setBook(data);
-
-//         const contentUrl =
-//           data.formats["text/plain; charset=us-ascii"] ||
-//           data.formats["text/plain"] ||
-//           data.formats["text/html"];
-
-//         const textRes = await fetch(contentUrl);
-//         let rawText = await textRes.text();
-
-//         // Clean Gutenberg headers/footers
-//         rawText = rawText
-//           .replace(/[\r\n]{3,}/g, "\n\n")
-//           .replace(/(\*\*\* START.*?\*\*\*)[\s\S]*?(\*\*\* END OF)/gi, "")
-//           .trim();
-
-//         // Split text into "pages" (~1800 characters each)
-//         const chunkSize = 1800;
-//         const chunks = [];
-//         for (let i = 0; i < rawText.length; i += chunkSize) {
-//           chunks.push(rawText.slice(i, i + chunkSize));
-//         }
-
-//         setPages(chunks);
-//       } catch (err) {
-//         console.error("Error loading book:", err);
-//       } finally {
-//         setLoading(false);
-//       }
-//     }
-
-//     loadBook();
-//   }, [id]);
-
     useEffect(() => {
   async function loadBook() {
     try {
