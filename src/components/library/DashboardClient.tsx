@@ -68,12 +68,12 @@ export default function DashboardClient() {
       {collections.length === 0 ? (
         <p className="text-zinc-400">
           You haven’t added any books yet.{" "}
-          <a
+          <Link
             href="/discover"
             className="text-lime-300 hover:text-lime-200 underline"
           >
             Discover books
-          </a>
+          </Link>
           .
         </p>
       ) : (

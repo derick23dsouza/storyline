@@ -17,7 +17,7 @@ export default function Navbar() {
     { name: "Discover Books", href: "/discover" },
     // { name: "Community", href: "/community" },
     { name: "Dashboard", href: "/dashboard" },
-    // { name: "Insights", href: "/insights" },
+    { name: "Insights", href: "/insights" },
   ];
 
   return (

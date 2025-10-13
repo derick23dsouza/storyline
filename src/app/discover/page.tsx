@@ -64,12 +64,12 @@ export default async function DiscoverPage(props: {
           <span className="text-zinc-400">Page {page}</span>
 
           {nextPage && (
-            <a
+            <Link
               href={`/discover?q=${query}&page=${nextPage}`}
               className="px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:text-lime-300 hover:border-lime-300 transition-all"
             >
               Next →
-            </a>
+            </Link>
           )}
         </div>
       </Container>
