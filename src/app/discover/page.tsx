@@ -13,7 +13,9 @@ export default async function DiscoverPage(props: {
 
   const res = await fetch(
     `https://gutendex.com/books?${query ? `search=${encodeURIComponent(query)}&` : ""}page=${page}`,
-    { cache: "no-store" }
+    {next:{
+      revalidate: 60*60*24
+    }}
   );
 
   const data = await res.json();
