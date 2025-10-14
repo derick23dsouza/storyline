@@ -1,51 +1,35 @@
 "use client";
 
+import { GutendexResult } from "@/app/data/gutendexType";
 import Image from "next/image";
 import { useState, useEffect, startTransition } from "react";
 import { toast } from "react-hot-toast";
 
-type GutendexBook = {
-  id: number;
-  title: string;
-  authors: { name: string }[];
-  languages: string[];
-  download_count: number;
-  formats: Record<string, string>;
-};
+
 
 interface Props {
-  book: GutendexBook;
+  book: GutendexResult;
   onAdded?: () => void;
   openAuthModal?: () => void;
+  isAdded?: boolean
 }
 
-export default function BookCard({ book, onAdded, openAuthModal }: Props) {
+export default function BookCard({ book, onAdded, openAuthModal, isAdded }: Props) {
   const [loading, setLoading] = useState(false);
-  const [checking, setChecking] = useState(true);
+  
   const [added, setAdded] = useState(false);
+
+  if(isAdded)setAdded(true);
 
   const cover =
     book.formats["image/jpeg"] ||
     book.formats["image/jpg"] ||
     `https://www.gutenberg.org/cache/epub/${book.id}/pg${book.id}.cover.medium.jpg`;
+    const authors = book.authors?.map((a) => a.name).join(", ");
+  
 
-  const authors = book.authors.map((a) => a.name).join(", ");
-
-  //  Check if this book already exists in user's collection
-  useEffect(() => {
-    async function checkBook() {
-      try {
-        const res = await fetch(`/api/collections/check?bookId=${book.id}`);
-        const json = await res.json();
-        setAdded(json.exists);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setChecking(false);
-      }
-    }
-    checkBook();
-  }, [book.id]);
+  
+  
 
   async function handleAdd() {
     setLoading(true);
@@ -99,7 +83,7 @@ export default function BookCard({ book, onAdded, openAuthModal }: Props) {
         <p className="text-sm text-zinc-400 truncate">{authors?authors:"Unkown Author"}</p>
 
         <div className="flex items-center justify-between mt-2">
-          <p className="text-xs text-lime-300">{book.languages.join(", ")}</p>
+          <p className="text-xs text-lime-300">{book.languages?.join(", ")}</p>
           <p className="text-xs text-zinc-400">
             {book.download_count} downloads
           </p>
@@ -108,20 +92,16 @@ export default function BookCard({ book, onAdded, openAuthModal }: Props) {
         <div className="mt-3">
           <button
             onClick={handleAdd}
-            disabled={loading || added || checking}
+            disabled={loading || added}
             className={`w-full text-sm py-2 rounded-md font-medium transition-all ${
-              checking
-                ? "bg-zinc-700/60 text-zinc-400 cursor-wait"
-                : added
+               added
                 ? "bg-lime-300/30 text-lime-200 cursor-default"
                 : loading
                 ? "bg-lime-200/40 text-black cursor-not-allowed"
                 : "bg-lime-300 text-black hover:bg-lime-400"
             }`}
           >
-            {checking
-              ? "Checking..."
-              : added
+            { added
               ? "✓ Added"
               : loading
               ? "Adding..."

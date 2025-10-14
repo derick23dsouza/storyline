@@ -6,11 +6,12 @@ import ReactMarkdown from "react-markdown";
 import { getBookSuggestions } from "../actions/actions";
 import { useSession } from "@/lib/auth-client";
 import Link from "next/link";
+import Container from "@/components/container/Container";
 
 export default function InsightsClient() {
   const [insights, setInsights] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const session= useSession();
+  const session = useSession();
 
   useEffect(() => {
     const loadInsights = async () => {
@@ -24,7 +25,7 @@ export default function InsightsClient() {
         }));
 
         const text = await getBookSuggestions(books);
-        if(text) setInsights(text);
+        if (text) setInsights(text);
 
 
       } catch (e) {
@@ -38,11 +39,23 @@ export default function InsightsClient() {
     loadInsights();
   }, []);
 
-   if(!session.data)return(<div className=" bg-black text-white py-16 px-6 max-w-6xl mx-auto flex flex-col  gap-5 text-center items-center">
-        <h1 className="text-4xl">Please Login to continue</h1>
-        <Link href={'/login'} className="text-2xl text-lime-300 max-w-sm px-4 py-2 bg-zinc-950 border border-white rounded-lg">Login</Link>
-        
-    </div>)
+  if (!session.data) return (
+
+    <Container>
+      <div className="text-center py-24">
+        <h2 className="text-2xl text-lime-300 mb-4">
+          You seem to be signed out. Sign in to view your insights.
+        </h2>
+        <Link
+          href="/login"
+          className="text-sm text-zinc-400 underline hover:text-lime-200"
+        >
+          Go to Login
+        </Link>
+      </div>
+    </Container>
+
+  )
 
   if (loading) return <p className="text-zinc-400">Loading your insights...</p>;
 
