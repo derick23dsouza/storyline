@@ -2,6 +2,7 @@
 
 import { GutendexResult } from "@/app/data/gutendexType";
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect, startTransition } from "react";
 import { toast } from "react-hot-toast";
 
@@ -89,7 +90,7 @@ export default function BookCard({ book, onAdded, openAuthModal, isAdded }: Prop
           </p>
         </div>
 
-        <div className="mt-3">
+        <div className="flex flex-col gap-2 mt-3">
           <button
             onClick={handleAdd}
             disabled={loading || added}
@@ -107,6 +108,12 @@ export default function BookCard({ book, onAdded, openAuthModal, isAdded }: Prop
               ? "Adding..."
               : "Add to Library"}
           </button>
+          <Link
+            href={`/book/${book.id}`}
+            className=" text-sm text-center py-2 rounded-md font-medium bg-zinc-900 border border-zinc-700 text-zinc-300 hover:text-lime-300 hover:border-lime-300 transition-all"
+          >
+            View Book
+          </Link>
         </div>
       </div>
     </div>
