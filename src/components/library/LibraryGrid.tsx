@@ -89,7 +89,7 @@ export default function LibraryGrid({
         return (
           <div
             key={item.id}
-            className="rounded-2xl overflow-hidden bg-zinc-900/60 border border-zinc-800 hover:border-lime-300/40 transition-all"
+            className="rounded-2xl overflow-hidden bg-zinc-900/60 border border-zinc-800 hover:border-lime-300/40  transition-all group"
           >
             {/* Cover */}
             <div className="relative aspect-[3/4]">
@@ -101,7 +101,7 @@ export default function LibraryGrid({
                 alt={item.book.title}
                 fill
                 unoptimized
-                className="object-cover"
+                className="object-cover group-hover:scale-105 transition-transform"
               />
             </div>
 
@@ -128,26 +128,26 @@ export default function LibraryGrid({
               </div>
 
               {/* Actions */}
-              <div className="flex justify-between mt-4 gap-2">
+              <div className="flex flex-col justify-between mt-4 gap-2">
                 <button
                   onClick={() => handleUpdateProgress(item.id, 100)}
                   disabled={isLoading}
-                  className="flex-1 text-xs bg-lime-300 text-black py-1.5 rounded hover:bg-lime-400 transition disabled:opacity-50"
+                  className="flex-1 text-sm py-2 bg-lime-300 text-black font-medium  rounded-md hover:bg-lime-500 transition disabled:opacity-50"
                 >
                   {isLoading ? "Updating..." : "Mark Complete"}
                 </button>
 
                 <Link
                   href={`/book/${item.book.id}`}
-                  className="flex-1 text-xs bg-blue-950 text-lime-300 py-1.5 rounded border border-lime-300/30 hover:bg-blue-900 transition text-center"
+                  className="flex-1 text-sm py-2 font-medium rounded-md bg-zinc-900 border border-zinc-700 text-zinc-300 hover:text-lime-300 hover:border-lime-300 transition text-center"
                 >
-                  View
+                  View Book
                 </Link>
 
                 <button
                   onClick={() => handleRemove(item.book.id)}
                   disabled={isLoading}
-                  className="flex-1 text-xs bg-zinc-800 text-zinc-400 py-1.5 rounded hover:text-red-400 transition disabled:opacity-50"
+                  className="flex-1 text-sm py-2 bg-zinc-800 text-zinc-400 font-medium rounded-md hover:text-red-400 transition disabled:opacity-50"
                 >
                   {isLoading ? "Removing..." : "Remove"}
                 </button>
