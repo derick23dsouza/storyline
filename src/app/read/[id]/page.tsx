@@ -1,37 +1,62 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function ReadingPage() {
   const { id } = useParams();
+  const router = useRouter();
+
   const [pages, setPages] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [book, setBook] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+  // Load book content from server API
+  useEffect(() => {
   async function loadBook() {
+    setLoading(true);
     try {
       const res = await fetch(`/api/read/${id}`);
-      const data = await res.json();
 
+      // Parse JSON once
+      const data = await res.json().catch(() => ({ error: "Unknown" }));
+
+      if (!res.ok) throw new Error(data.error || "Failed to fetch book");
       if (!data.content) throw new Error("No content");
 
-      const rawText = data.content.replace(/[\r\n]{3,}/g, "\n\n").trim();
-
-      const chunkSize = 1800;
-      const chunks = [];
-      for (let i = 0; i < rawText.length; i += chunkSize) {
-        chunks.push(rawText.slice(i, i + chunkSize));
-      }
+      
 
       setBook(data.book);
-      setPages(chunks);
+
+      // Clean up content
+      let content = data.content.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+
+      // Split into paragraphs
+      const paragraphs: string[] = content.split(/\n\n+/);
+
+      // Split into pages: 3 paragraphs per page, or start new page at chapter headings
+      const pages: string[] = [];
+      let tempPage: string[] = [];
+
+      paragraphs.forEach((p) => {
+        tempPage.push(p);
+
+        if (tempPage.length === 3 || /^chapter\s+\d+/i.test(p)) {
+          pages.push(tempPage.join("\n\n"));
+          tempPage = [];
+        }
+      });
+
+      if (tempPage.length) pages.push(tempPage.join("\n\n"));
+
+      setPages(pages);
+
     } catch (err) {
-      console.error("Error loading book:", err);
+      console.error("Failed to load book:", err);
+      setBook(null);
     } finally {
       setLoading(false);
     }
@@ -41,8 +66,7 @@ export default function ReadingPage() {
 }, [id]);
 
 
-  const nextPage = () =>
-    setCurrentPage((p) => Math.min(p + 1, pages.length - 1));
+  const nextPage = () => setCurrentPage((p) => Math.min(p + 1, pages.length - 1));
   const prevPage = () => setCurrentPage((p) => Math.max(p - 1, 0));
 
   if (loading) return <p className="text-center py-12 text-zinc-400 mt-30">Loading book...</p>;
@@ -53,12 +77,12 @@ export default function ReadingPage() {
       <div className="max-w-4xl w-full">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <Link
-            href={`/book/${book.id}`}
+          <button
+            onClick={() => router.back()}
             className="inline-flex items-center text-zinc-400 hover:text-lime-300 transition"
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> Back
-          </Link>
+          </button>
           <h1 className="text-xl font-semibold text-center flex-1">
             {book.title}
           </h1>
@@ -70,7 +94,7 @@ export default function ReadingPage() {
         </div>
 
         {/* Pagination Controls */}
-        <div className="flex justify-between items-center mt-6">
+        <div className="flex justify-between items-center mt-6 w-full">
           <button
             onClick={prevPage}
             disabled={currentPage === 0}
@@ -95,3 +119,7 @@ export default function ReadingPage() {
     </section>
   );
 }
+
+
+
+
