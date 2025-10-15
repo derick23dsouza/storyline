@@ -40,3 +40,48 @@ export async function DELETE(
     );
   }
 }
+
+
+
+
+
+export async function GET(
+  req: Request,
+  context: { params: Promise<{ id: string }>  }
+) {
+  const session = await auth.api.getSession({headers:req.headers})
+  if (!session?.user?.id) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+  }
+
+  const { id: bookId } = await context.params;
+
+  try {
+    const collection = await prisma.collection.findFirst({
+      where: {
+        userId: session.user.id,
+        bookId: bookId, // assuming this is a string column in your schema
+      },
+      select: {
+        id: true,
+        bookId: true,
+        lastPage: true,
+        progress: true,
+      },
+    });
+
+    if (!collection) {
+      return new Response(JSON.stringify({ inLibrary: false }), { status: 200 });
+    }
+
+    return new Response(
+      JSON.stringify({ inLibrary: true, ...collection }),
+      { status: 200 }
+    );
+  } catch (err) {
+    console.error("Error fetching collection:", err);
+    return new Response(JSON.stringify({ error: "Failed to fetch progress" }), { status: 500 });
+  }
+}
+
+

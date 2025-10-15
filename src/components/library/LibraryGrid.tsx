@@ -5,15 +5,18 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 
-type CollectionItem = {
+export type CollectionItem = {
   id: string;
   progress: number;
   status: string;
+  lastPage?: number | null;
+  totalPages?: number | null;
   book: {
     id: string;
     title: string;
     author: string | null;
     cover: string | null;
+    category?: string | null;
   };
 };
 
@@ -23,15 +26,16 @@ export default function LibraryGrid({
   collections: CollectionItem[];
 }) {
   const [collections, setCollections] = useState(initialCollections);
-  const [loadingId, setLoadingId] = useState<string | null>(null); // 
+  const [loadingId, setLoadingId] = useState<string | null>(null); 
+  
 
-  async function handleUpdateProgress(id: string, progress: number) {
+  async function handleUpdateProgress(id: string, lastPage:number, progress: number) {
     setLoadingId(id);
     try {
       const res = await fetch("/api/collections/progress", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, progress }),
+        body: JSON.stringify({ bookId:id, lastPage, progress }),
       });
 
       if (res.ok) {
@@ -41,6 +45,7 @@ export default function LibraryGrid({
           )
         );
         toast.success("Progress updated");
+        
       } else {
         toast.error("Failed to update progress");
       }
@@ -130,11 +135,11 @@ export default function LibraryGrid({
               {/* Actions */}
               <div className="flex flex-col justify-between mt-4 gap-2">
                 <button
-                  onClick={() => handleUpdateProgress(item.id, 100)}
+                  onClick={() => handleUpdateProgress(item.book.id, item.lastPage??1, 100)}
                   disabled={isLoading}
                   className="flex-1 text-sm py-2 bg-lime-300 text-black font-medium  rounded-md hover:bg-lime-500 transition disabled:opacity-50"
                 >
-                  {isLoading ? "Updating..." : "Mark Complete"}
+                  {isLoading ? "Updating...": item.progress==100? "Completed":"Mark as Completed"}
                 </button>
 
                 <Link

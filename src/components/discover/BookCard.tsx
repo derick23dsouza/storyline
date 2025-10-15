@@ -20,7 +20,12 @@ export default function BookCard({ book, onAdded, openAuthModal, isAdded }: Prop
   
   const [added, setAdded] = useState(false);
 
-  if(isAdded)setAdded(true);
+  useEffect(() => {
+  if (isAdded) {
+    setAdded(true);
+  }
+}, [isAdded]);
+
 
   const cover =
     book.formats["image/jpeg"] ||

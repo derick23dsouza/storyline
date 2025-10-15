@@ -2,8 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+
+interface CollectionData {
+  currentPage: number;
+  progress: number;
+}
 
 export default function ReadingPage() {
   const { id } = useParams();
@@ -14,60 +18,77 @@ export default function ReadingPage() {
   const [book, setBook] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // Load book content from server API
+  // Fetch book content & last saved collection (if authenticated)
   useEffect(() => {
-  async function loadBook() {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/read/${id}`);
+    async function loadBook() {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/read/${id}`);
+        const data = await res.json().catch(() => ({ error: "Unknown" }));
+        if (!res.ok) throw new Error(data.error || "Failed to fetch book");
+        if (!data.content) throw new Error("No content");
 
-      // Parse JSON once
-      const data = await res.json().catch(() => ({ error: "Unknown" }));
+        setBook(data.book);
 
-      if (!res.ok) throw new Error(data.error || "Failed to fetch book");
-      if (!data.content) throw new Error("No content");
+        // Clean content
+        let content = data.content.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+        const paragraphs: string[] = content.split(/\n\n+/);
 
-      
+        // Split into pages: 3 paragraphs per page or new chapter
+        const pages: string[] = [];
+        let tempPage: string[] = [];
 
-      setBook(data.book);
+        paragraphs.forEach((p) => {
+          tempPage.push(p);
+          if (tempPage.length === 3 || /^chapter\s+\d+/i.test(p)) {
+            pages.push(tempPage.join("\n\n"));
+            tempPage = [];
+          }
+        });
+        if (tempPage.length) pages.push(tempPage.join("\n\n"));
 
-      // Clean up content
-      let content = data.content.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+        setPages(pages);
 
-      // Split into paragraphs
-      const paragraphs: string[] = content.split(/\n\n+/);
-
-      // Split into pages: 3 paragraphs per page, or start new page at chapter headings
-      const pages: string[] = [];
-      let tempPage: string[] = [];
-
-      paragraphs.forEach((p) => {
-        tempPage.push(p);
-
-        if (tempPage.length === 3 || /^chapter\s+\d+/i.test(p)) {
-          pages.push(tempPage.join("\n\n"));
-          tempPage = [];
+        // Load user's last saved page if authenticated
+        const colRes = await fetch(`/api/collections/${id}`);
+        if (colRes.ok) {
+          const colData: CollectionData = await colRes.json();
+          setCurrentPage(colData.currentPage || 0);
         }
-      });
-
-      if (tempPage.length) pages.push(tempPage.join("\n\n"));
-
-      setPages(pages);
-
-    } catch (err) {
-      console.error("Failed to load book:", err);
-      setBook(null);
-    } finally {
-      setLoading(false);
+      } catch (err) {
+        console.error("Failed to load book:", err);
+        setBook(null);
+      } finally {
+        setLoading(false);
+      }
     }
-  }
 
-  loadBook();
-}, [id]);
+    loadBook();
+  }, [id]);
 
+  
+  const updateProgress = async (newPage: number) => {
+    setCurrentPage(newPage);
 
-  const nextPage = () => setCurrentPage((p) => Math.min(p + 1, pages.length - 1));
-  const prevPage = () => setCurrentPage((p) => Math.max(p - 1, 0));
+    const progress = Math.floor(((newPage + 1) / pages.length) * 100);
+
+    try {
+      await fetch("/api/collections/progress", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          bookId: id,
+          lastPage: newPage,
+          progress,
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to update progress", err);
+    }
+  };
+
+  const nextPage = () => updateProgress(Math.min(currentPage + 1, pages.length - 1));
+  const prevPage = () => updateProgress(Math.max(currentPage - 1, 0));
 
   if (loading) return <p className="text-center py-12 text-zinc-400 mt-30">Loading book...</p>;
   if (!book) return <p className="text-center text-red-500 mt-30">Failed to load book.</p>;
@@ -83,9 +104,7 @@ export default function ReadingPage() {
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> Back
           </button>
-          <h1 className="text-xl font-semibold text-center flex-1">
-            {book.title}
-          </h1>
+          <h1 className="text-xl font-semibold text-center flex-1">{book.title}</h1>
         </div>
 
         {/* Reader */}
@@ -104,7 +123,7 @@ export default function ReadingPage() {
           </button>
 
           <span className="text-zinc-400">
-            Page {currentPage + 1} / {pages.length}
+            Page {currentPage + 1} / {pages.length} ({Math.floor(((currentPage + 1) / pages.length) * 100)}%)
           </span>
 
           <button
@@ -119,7 +138,3 @@ export default function ReadingPage() {
     </section>
   );
 }
-
-
-
-
