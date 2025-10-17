@@ -2,24 +2,28 @@ import Container from "@/components/container/Container";
 import DiscoverClient from "@/components/discover/DiscoverClient";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
-import { authClient } from "@/lib/auth-client";
+import { auth } from "@/lib/auth";
 
-// ✅ Prevent this page from being fully dynamic
-export const dynamic = "force-static";
-export const revalidate = 0;
+
 
 export default async function DiscoverPage() {
-  const session = await authClient.getSession({
-    fetchOptions: { headers: await headers() },
-  });
+  // const session = await authClient.getSession({
+  //   fetchOptions: { headers: await headers() },
+  // });
+
+  const session= await auth.api.getSession({
+    headers: await headers()
+  })
 
   let userId: string | null = null;
 
-  if ("data" in session && session.data?.user) {
-    userId = session.data.user.id;
+  if (session){
+    userId= session.user.id;
   }
 
   let userCollections: string[] = [];
+
+  console.log(userId);
 
   if (userId) {
     try {
@@ -28,6 +32,9 @@ export default async function DiscoverPage() {
         select: { bookId: true },
       });
       userCollections = collections.map((c) => c.bookId);
+
+      console.log(userCollections);
+      console.log(userId);
     } catch (err) {
       console.error("Error fetching user collections:", err);
     }
